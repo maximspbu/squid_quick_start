@@ -1,13 +1,14 @@
 #/etc/bin/bash
+path=$(pwd)
 sudo apt install openssl
 sudo apt build-dep squid
 sudo apt install libssl-dev
 mkdir ~/squid_build && cd ~/squid_build
 sudo apt source squid
 apt-get install devscripts
-sed  '/ \--with-dedfault-user=proxy / /a --enable-ssl \
---enable-ssl-crtd \
---with-openssl' debian/rules
+sed  '/ \--with-dedfault-user=proxy \\ /a \t\t--enable-ssl \\ \n
+\t\t--enable-ssl-crtd \\ \n
+\t\t--with-openssl' debian/rules
 # sudo vi debian/rules
 
 # --enable-ssl \
@@ -24,6 +25,8 @@ sudo openssl req -new -key /etc/squid/ssl/squid.key -out /etc/squid/ssl/squid.cs
 sudo openssl x509 -req -days 3650 -in /etc/squid/ssl/squid.csr -signkey /etc/squid/ssl/squid.key -out /etc/squid/ssl/squid.pem
 sudo openssl x509 -in /etc/squid/ssl/squid.pem -outform DER -out squid.der
 chown -R proxy:proxy /etc/squid/ssl
+sudo cp /etc/squid/squid.conf /etc/squid/squid.conf.save
+sudo cp $path/squid.conf /etc/squid/
 # sudo vi /etc/squid/squid.conf
 
 # http_access allow all
