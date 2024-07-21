@@ -1,14 +1,17 @@
 #/etc/bin/bash
 path=$(pwd)
-sudo apt install openssl
-sudo apt build-dep squid
-sudo apt install libssl-dev
+sudo apt update
+sudo apt install openssl -y
+sed -i '/^# *deb-src/s/^# *//' /etc/apt/sources.list
+sudo apt update
+sudo apt build-dep squid -y
+sudo apt install libssl-dev -y
 mkdir ~/squid_build && cd ~/squid_build
 sudo apt source squid
-apt-get install devscripts
-sed  '/ \--with-dedfault-user=proxy \\ /a \t\t--enable-ssl \\ \n
-\t\t--enable-ssl-crtd \\ \n
-\t\t--with-openssl' debian/rules
+apt-get install devscripts -y
+cd squid-[0-9]*.[0-9]*
+sed -i '/--with-default-user=proxy\/a\\t\t--enable-ssl \\\n\t\t--enable-ssl-crtd \\\n\t\t--with-openssl' debian/rules
+apt --fix-broken install
 # sudo vi debian/rules
 
 # --enable-ssl \
